@@ -32,8 +32,6 @@ namespace TrashCollector.Models
         [Display(Name = "Select One Time Pick Up Date")]
         public DateTime OneTimePickUp { get; set; }
 
-
-
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser Identity { get; set; }

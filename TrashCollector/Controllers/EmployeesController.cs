@@ -41,11 +41,24 @@ namespace TrashCollector.Controllers
         // POST: EmployeesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Employee employee)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (employee.Id == 0)
+                {
+                    _context.Employee.Add(employee);
+                }
+                else
+                {
+                    var employeeInDB = _context.Customer.Single(m => m.Id == employee.Id);
+                    employeeInDB.FirstName = employee.FirstName;
+                    employeeInDB.LastName = employee.LastName;
+                    employeeInDB.StreetAddress = employee.ZipCode;
+                    
+                }
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Employees");
             }
             catch
             {
@@ -56,17 +69,26 @@ namespace TrashCollector.Controllers
         // GET: EmployeesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var employee = _context.Employee.Where(c => c.Id == id).SingleOrDefault();
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
         }
 
         // POST: EmployeesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Employee employee)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _context.Update(employee);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "Employees");
+                
             }
             catch
             {
