@@ -73,17 +73,27 @@ namespace TrashCollector.Controllers
         // GET: CustomersController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
         }
 
         // POST: CustomersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Customer customer)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                
+                _context.Update(customer);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "Customers");
             }
             catch
             {
@@ -91,25 +101,6 @@ namespace TrashCollector.Controllers
             }
         }
 
-        // GET: CustomersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }
