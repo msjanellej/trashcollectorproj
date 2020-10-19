@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrashCollector.Data;
 
 namespace TrashCollector.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201019160950_AddtoCustDB")]
+    partial class AddtoCustDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace TrashCollector.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "20036d2e-cf5e-4efd-a369-d7882426b59a",
-                            ConcurrencyStamp = "5582afd8-5a16-420e-a9b5-5996c8df3dc7",
+                            Id = "798f9e0b-002f-42a0-a9d0-6f66a5e44ee6",
+                            ConcurrencyStamp = "1cb2ae6d-bc0c-43ad-a2d1-c37c58a41152",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "0734fb64-467d-4544-82d6-e428a2de80b1",
-                            ConcurrencyStamp = "f1ed3490-1162-4ac6-bf4d-802f5b9d823a",
+                            Id = "e758a941-27fd-4a36-812f-dc6531b12ac5",
+                            ConcurrencyStamp = "b1da268d-8e88-467c-b05b-7fd8be50fa47",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -260,6 +262,7 @@ namespace TrashCollector.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StreetAddress")
