@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrashCollector.Data;
 
 namespace TrashCollector.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201019203511_AddedSuspensionInfo")]
+    partial class AddedSuspensionInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace TrashCollector.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a294247c-8fae-41f5-b3df-1275575469b7",
-                            ConcurrencyStamp = "de806769-8dcb-4bf5-9cd9-d9cc256040b9",
+                            Id = "e219556b-bcca-41ef-ba58-858c9ca8f98f",
+                            ConcurrencyStamp = "48bcb6ae-fbc8-4320-ac21-c43c85b97667",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "fad164b0-e444-4f9a-b5f3-7dded33714fb",
-                            ConcurrencyStamp = "11af05f5-9285-4d49-b928-f593b1597edf",
+                            Id = "4bcbaea8-41ca-40d7-9f66-3a408a50b19e",
+                            ConcurrencyStamp = "eef87c24-2c81-4084-b7a5-3cbf0557c745",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -278,7 +280,7 @@ namespace TrashCollector.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("TrashCollector.Models.Employee", b =>
@@ -304,7 +306,7 @@ namespace TrashCollector.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

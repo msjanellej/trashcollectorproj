@@ -1,0 +1,40 @@
+﻿@model TrashCollector.Models.Customer
+
+@{
+    ViewData["Title"] = "SuspendService";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>SuspendService</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SuspendService">
+
+            <div class="form-group">
+                <label asp-for="SuspensionStartDate" class="control-label"></label>
+                <input asp-for="SuspensionStartDate" class="form-control" />
+                <span asp-validation-for="SuspensionStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuspensionEndDate" class="control-label"></label>
+                <input asp-for="SuspensionEndDate" class="form-control" />
+                <span asp-validation-for="SuspensionEndDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

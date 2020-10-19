@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,11 +30,20 @@ namespace TrashCollector.Models
         [Display (Name = "Balance Due")]
         public double BalanceDue { get; set; }
         [DataType(DataType.Date)]
-        [Display(Name = "Select One Time Pick Up Date")]
+        [Display(Name = "One Time Pick Up Date")]
         public DateTime OneTimePickUp { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "Temporary Suspension Start Date")]
+        public DateTime SuspensionStartDate { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "Temporary Suspension End Date")]
+        public DateTime SuspensionEndDate { get; set; }
+
 
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser Identity { get; set; }
+
+        
     }
 }
