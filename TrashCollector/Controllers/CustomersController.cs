@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,9 +15,12 @@ using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
+    [Authorize(Roles = "Customer")]
+
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+
 
         public CustomersController(ApplicationDbContext context)
         {
@@ -29,14 +33,23 @@ namespace TrashCollector.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var customer = _context.Customers.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
-            return View();
+            //if customer is null then redirect to the create page
+            if (customer == null)
+            {
+                return RedirectToAction("Create", "Customers");
+            }
+            return View(customer);
+
         }
 
         // GET: CustomersController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id) //Do I need this??? 
         {
-            var customerOnList = _context.Customers.SingleOrDefault(c => c.Id == id);
-            return View(customerOnList);
+            var customersOnList = _context.Customers.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
+            return View(customer);
         }
 
         // GET: CustomersController/Create
@@ -52,26 +65,11 @@ namespace TrashCollector.Controllers
         {
             try
             {
-                if (customer.Id == 0)
-                {
-                    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    customer.IdentityUserId = userId;
-                    _context.Add(customer);
-
-                }
-                else
-                {
-                    var customerInDB = _context.Customers.Single(m => m.Id == customer.Id);
-                    customerInDB.FirstName = customer.FirstName;
-                    customerInDB.LastName = customer.LastName;
-                    customerInDB.StreetAddress = customer.StreetAddress;
-                    customerInDB.City = customer.City;
-                    customerInDB.State = customer.State;
-                    customerInDB.ZipCode = customer.ZipCode;
-                    
-                }
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
+                _context.Add(customer);
                 _context.SaveChanges();
-                return RedirectToAction("Index", "Customers");
+                return RedirectToAction("Details", "Customers");
             }
             catch
             {
@@ -82,7 +80,10 @@ namespace TrashCollector.Controllers
         // GET: CustomersController/Edit/5
         public ActionResult Edit(int id)
         {
-            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
+            var customersOnList = _context.Customers.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
             if (customer == null)
             {
                 return NotFound();
@@ -102,7 +103,7 @@ namespace TrashCollector.Controllers
                 _context.Update(customer);
                 _context.SaveChanges();
 
-                return RedirectToAction("Index", "Customers");
+                return RedirectToAction("Details", "Customers");
             }
             catch
             {
@@ -111,7 +112,10 @@ namespace TrashCollector.Controllers
         }
         public ActionResult SuspendService(int id)
         {
-            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
+            var customersOnList = _context.Customers.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
             if (customer == null)
             {
                 return NotFound();
@@ -126,18 +130,18 @@ namespace TrashCollector.Controllers
         {
             try
             {
-                
+                // update just the suspend service & the end date.
                 _context.Update(customer);
                 _context.SaveChanges();
 
-                return RedirectToAction("Index", "Customers");
+                return RedirectToAction("Details", "Customers");
             }
             catch
             {
                 return View();
             }
         }
-        public bool CompareDates (DateTime startDate, DateTime endDate)
+        public bool CompareDates(DateTime startDate, DateTime endDate)
         {
             var suspendStartDate = _context.Customers.Select(d => d.SuspensionStartDate).FirstOrDefault();
             var suspendEndDate = _context.Customers.Select(d => d.SuspensionEndDate).FirstOrDefault();
@@ -150,14 +154,14 @@ namespace TrashCollector.Controllers
                 {
                     return false;
                 }
-                else if (suspendStart >=0 && suspendEnd <= 0)
+                else if (suspendStart >= 0 && suspendEnd <= 0)
                 {
                     return true;
                 }
                 else
                 {
                     return false;
-                }            
+                }
             }
             else
             {
