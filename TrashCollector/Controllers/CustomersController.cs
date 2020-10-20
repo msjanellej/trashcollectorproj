@@ -99,7 +99,6 @@ namespace TrashCollector.Controllers
         {
             try
             {
-
                 _context.Update(customer);
                 _context.SaveChanges();
 
@@ -134,48 +133,14 @@ namespace TrashCollector.Controllers
                 _context.Update(customer);
                 _context.SaveChanges();
 
-                return RedirectToAction("Details", "Customers");
+                return RedirectToAction("Index", "Customers");
             }
             catch
             {
                 return View();
             }
         }
-        public bool CompareDates(DateTime startDate, DateTime endDate)
-        {
-            var suspendStartDate = _context.Customers.Select(d => d.SuspensionStartDate).FirstOrDefault();
-            var suspendEndDate = _context.Customers.Select(d => d.SuspensionEndDate).FirstOrDefault();
-            var currentDate = DateTime.Now;
-            if (suspendStartDate != null)
-            {
-                int suspendStart = DateTime.Compare(suspendStartDate, currentDate);
-                int suspendEnd = DateTime.Compare(suspendEndDate, currentDate);
-                if (suspendStart < 0)
-                {
-                    return false;
-                }
-                else if (suspendStart >= 0 && suspendEnd <= 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public void TakeOffRoute(bool isSuspended)
-        {
-            if (isSuspended == true)
-            {
-                //remove this from route
-            }
-        }
-
+        
 
     }
 }

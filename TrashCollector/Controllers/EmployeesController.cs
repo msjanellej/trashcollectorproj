@@ -91,8 +91,57 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
+        public ActionResult PickUps()
+        {
+            var employeesOnList = _context.Employees.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Customers.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
 
-        
+            var customersOnList = _context.Customers.Where(c => c.ZipCode == employee.ZipCode);            
+            return View(customersOnList);
+        }
+        public bool CompareDates(DateTime startDate, DateTime endDate)
+        {
+            var suspendStartDate = _context.Customers.Select(d => d.SuspensionStartDate).FirstOrDefault();
+            var suspendEndDate = _context.Customers.Select(d => d.SuspensionEndDate).FirstOrDefault();
+            var currentDate = DateTime.Now;
+            if (suspendStartDate != null)
+            {
+                int suspendStart = DateTime.Compare(suspendStartDate, currentDate);
+                int suspendEnd = DateTime.Compare(suspendEndDate, currentDate);
+                if (suspendStart < 0)
+                {
+                    return false;
+                }
+                else if (suspendStart >= 0 && suspendEnd >= 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void TakeOffRoute(bool isSuspended)
+        {
+            var pickUpDay = _context.Customers.Select(d => d.PickUpDay).FirstOrDefault();
+            DateTime today = DateTime.Now;
+
+            if (pickUpDay != today.DayOfWeek.ToString())
+            {
+                //remove this from route
+                //create list of 
+            }
+        }
+
+
+
 
     }
 }
