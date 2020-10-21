@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+// using AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -105,28 +106,44 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
-        public ActionResult PickUps()
+        public ActionResult PickUps(int id)
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult PickUps(string dayOfPickUp)
         {
 
             var employeesOnList = _context.Employees.ToList();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employees.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
-            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).ToList();
-            
-            List<Customer> todaysPickUps = new List<Customer>();
-            foreach (var customer in customersOnRoute)
-            {
-                if (customer.PickUpDay == )
-                {
-                    DailyPickUps.Add(customer);
-                }
-            }
+            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode && c.PickUpDay == dayOfPickUp).ToList();
+            return View("Index", customersOnRoute);
+        }
+        public ActionResult ConfirmPickUp(int id)
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
 
-            return View(DailyPickUps);
-        }    
-       
+        public ActionResult ConfirmPickUp(string dayOfPickUp)
+        {
 
-        
+            var employeesOnList = _context.Employees.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
+            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode && c.PickUpDay == dayOfPickUp).ToList();
+            return View("Index", customersOnRoute);
+        }
+
+
+
+
+
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TrashCollector.Models.Customer>
+﻿@model TrashCollector.Models.Customer
 
 @{
     ViewData["Title"] = "PickUps";
@@ -7,92 +7,52 @@
 
 <h1>PickUps</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StreetAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ZipCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PickUpDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BalanceDue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OneTimePickUp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuspensionStartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuspensionEndDate)
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StreetAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PickUpDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BalanceDue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OneTimePickUp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuspensionStartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuspensionEndDate)
-            </td>
-            
-            <td>
-                
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                
-            </td>
-        </tr>
+<h4>Select Day To View</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PickUps">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FirstName" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LastName" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StreetAddress" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="City" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="State" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ZipCode" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BalanceDue" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OneTimePickUp" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SuspensionStartDate" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SuspensionEndDate" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdentityUserId" />
+            <div class="form-group">
+                <label asp-for="PickUpDay" class="control-label"></label>
+                @*<input asp-for="PickUpDay" class="form-control" />*@
+                <input name="dayOfPickUp" class="form-control" />
+                <span asp-validation-for="PickUpDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-    </tbody>
-</table>

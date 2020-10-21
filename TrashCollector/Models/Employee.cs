@@ -22,5 +22,8 @@ namespace TrashCollector.Models
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser Identity { get; set; }
+
+        //[NotMapped]
+        //public string DayToSearchBy { get; set; }
     }
 }

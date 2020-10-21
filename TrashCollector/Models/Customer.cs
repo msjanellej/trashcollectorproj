@@ -38,6 +38,8 @@ namespace TrashCollector.Models
         [DataType(DataType.Date)]
         [Display(Name = "Temporary Suspension End Date")]
         public DateTime SuspensionEndDate { get; set; }
+        [Display(Name = "Has Been Picked Up")]
+        public bool isPickedUp { get; set; }
 
 
         [ForeignKey("IdentityUser")]

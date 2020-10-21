@@ -1,0 +1,91 @@
+﻿@model TrashCollector.Models.Customer
+
+@{
+    ViewData["Title"] = "ConfirmPickUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Confirm Pick Up For Customer</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ConfirmPickUp">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            @*<div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetAddress" class="control-label"></label>
+                <input asp-for="StreetAddress" class="form-control" />
+                <span asp-validation-for="StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ZipCode" class="control-label"></label>
+                <input asp-for="ZipCode" class="form-control" />
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PickUpDay" class="control-label"></label>
+                <input asp-for="PickUpDay" class="form-control" />
+                <span asp-validation-for="PickUpDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BalanceDue" class="control-label"></label>
+                <input asp-for="BalanceDue" class="form-control" />
+                <span asp-validation-for="BalanceDue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OneTimePickUp" class="control-label"></label>
+                <input asp-for="OneTimePickUp" class="form-control" />
+                <span asp-validation-for="OneTimePickUp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuspensionStartDate" class="control-label"></label>
+                <input asp-for="SuspensionStartDate" class="form-control" />
+                <span asp-validation-for="SuspensionStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuspensionEndDate" class="control-label"></label>
+                <input asp-for="SuspensionEndDate" class="form-control" />
+                <span asp-validation-for="SuspensionEndDate" class="text-danger"></span>
+            </div>*@
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="isPickedUp" /> @Html.DisplayNameFor(model => model.isPickedUp)
+                </label>
+            </div>
+       
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
