@@ -28,7 +28,21 @@ namespace TrashCollector.Controllers
         public ActionResult Index()
         {
             var employeesOnList = _context.Employees.ToList();
-            return View(employeesOnList);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
+            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).ToList();  
+            DateTime today = DateTime.Now;
+            List<Customer> todaysPickUps = new List<Customer>();
+            foreach (var customer in customersOnRoute)
+            {
+                if (customer.PickUpDay == today.DayOfWeek.ToString())
+                {
+                    todaysPickUps.Add(customer);    
+                }
+            }
+            
+            return View(todaysPickUps);
         }
 
         // GET: EmployeesController/Details/5
@@ -93,55 +107,26 @@ namespace TrashCollector.Controllers
         }
         public ActionResult PickUps()
         {
+
             var employeesOnList = _context.Employees.ToList();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var employee = _context.Customers.Where(c => c.IdentityUserId ==
+            var employee = _context.Employees.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
-
-            var customersOnList = _context.Customers.Where(c => c.ZipCode == employee.ZipCode);            
-            return View(customersOnList);
-        }
-        public bool CompareDates(DateTime startDate, DateTime endDate)
-        {
-            var suspendStartDate = _context.Customers.Select(d => d.SuspensionStartDate).FirstOrDefault();
-            var suspendEndDate = _context.Customers.Select(d => d.SuspensionEndDate).FirstOrDefault();
-            var currentDate = DateTime.Now;
-            if (suspendStartDate != null)
+            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).ToList();
+            
+            List<Customer> todaysPickUps = new List<Customer>();
+            foreach (var customer in customersOnRoute)
             {
-                int suspendStart = DateTime.Compare(suspendStartDate, currentDate);
-                int suspendEnd = DateTime.Compare(suspendEndDate, currentDate);
-                if (suspendStart < 0)
+                if (customer.PickUpDay == )
                 {
-                    return false;
-                }
-                else if (suspendStart >= 0 && suspendEnd >= 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    DailyPickUps.Add(customer);
                 }
             }
-            else
-            {
-                return false;
-            }
-        }
-        public void TakeOffRoute(bool isSuspended)
-        {
-            var pickUpDay = _context.Customers.Select(d => d.PickUpDay).FirstOrDefault();
-            DateTime today = DateTime.Now;
 
-            if (pickUpDay != today.DayOfWeek.ToString())
-            {
-                //remove this from route
-                //create list of 
-            }
-        }
+            return View(DailyPickUps);
+        }    
+       
 
-
-
-
+        
     }
 }
