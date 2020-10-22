@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Customers On Route</h1>
 
 <p>
     <a asp-action="PickUps">View Pick Ups For Another Day</a>
@@ -47,7 +47,7 @@
                 @Html.DisplayNameFor(model => model.SuspensionEndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Identity)
+                @Html.DisplayNameFor(model => model.isPickedUp)
             </th>
             <th></th>
         </tr>
@@ -89,9 +89,12 @@
                 @Html.DisplayFor(modelItem => item.SuspensionEndDate)
             </td>
             <td>
-                
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                
+                @Html.DisplayFor(modelItem => item.isPickedUp)
+            </td>
+            <td>
+
+                <a asp-action="CustomerDetails" asp-route-id="@item.Id">Customer Details</a>
+
             </td>
         </tr>
 }

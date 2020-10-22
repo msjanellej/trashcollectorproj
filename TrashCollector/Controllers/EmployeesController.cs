@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Security.Claims;
 using System.Threading.Tasks;
 // using AspNetCore;
@@ -15,8 +16,7 @@ using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
-    [Authorize(Roles = "Employee")]
-
+    // [Authorize(Roles = "Employee")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,31 +25,40 @@ namespace TrashCollector.Controllers
         {
             _context = context;
         }
-        // GET: EmployeesController
+        //GET: EmployeesController
         public ActionResult Index()
         {
             var employeesOnList = _context.Employees.ToList();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employees.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
-            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).ToList();  
+            if (employee == null)
+            {
+                return RedirectToAction("Create");
+            }
+            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode && c.isPickedUp == false).ToList();
             DateTime today = DateTime.Now;
             List<Customer> todaysPickUps = new List<Customer>();
             foreach (var customer in customersOnRoute)
             {
                 if (customer.PickUpDay == today.DayOfWeek.ToString())
                 {
-                    todaysPickUps.Add(customer);    
+                    todaysPickUps.Add(customer);
                 }
             }
-            
+
+
             return View(todaysPickUps);
         }
 
         // GET: EmployeesController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult CustomerDetails(int id)
         {
-            return View();
+            //var customersOnList = _context.Customers.ToList();
+            //var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
+            //id()).SingleOrDefault();
+            return View(customer);
         }
 
         // GET: EmployeesController/Create
@@ -125,21 +134,31 @@ namespace TrashCollector.Controllers
         }
         public ActionResult ConfirmPickUp(int id)
         {
-            return View();
+            var customersOnList = _context.Customers.ToList();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.Id ==
+            id).SingleOrDefault();
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public ActionResult ConfirmPickUp(string dayOfPickUp)
+        public ActionResult ConfirmPickUp(Customer customer)
         {
+            var customerPickedUp = _context.Customers.Single(m => m.Id == customer.Id);
+            customerPickedUp.isPickedUp = customer.isPickedUp;
 
-            var employeesOnList = _context.Employees.ToList();
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var employee = _context.Employees.Where(c => c.IdentityUserId ==
-            userId).SingleOrDefault();
-            var customersOnRoute = _context.Customers.Where(c => c.ZipCode == employee.ZipCode && c.PickUpDay == dayOfPickUp).ToList();
-            return View("Index", customersOnRoute);
+            customerPickedUp.BalanceDue += 10;
+            _context.SaveChanges();
+            return View("CustomerDetails", customerPickedUp);
         }
+
+
 
 
 

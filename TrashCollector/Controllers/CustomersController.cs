@@ -43,7 +43,7 @@ namespace TrashCollector.Controllers
         }
 
         // GET: CustomersController/Details/5
-        public ActionResult Details(int id) //Do I need this??? 
+        public ActionResult Details() //Do I need this??? 
         {
             var customersOnList = _context.Customers.ToList();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
