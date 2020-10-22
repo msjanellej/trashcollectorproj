@@ -101,12 +101,17 @@
         <script>
             let map;
             function initMap() {
-                const home = { lat: 42.9943, lng: -87.9702 };
+                const myLatLng = { lat: 42.9943, lng: -87.9702 };
                 const map = new google.maps.Map(document.getElementById("map"), {
-                    center: { lat: 42.9943, lng: -87.9702 },
                     zoom: 15,
+                    center: myLatLng,
                     
                 });
+                new google.maps.Marker({
+                    position: myLatLng,
+                    map,
+                    title: "Pickup Location",
+                })
             }
         </script>
         <script defer
