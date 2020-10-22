@@ -4,7 +4,6 @@ using System.Linq;
 using System.Media;
 using System.Security.Claims;
 using System.Threading.Tasks;
-// using AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,7 @@ using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
-    // [Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -46,18 +45,13 @@ namespace TrashCollector.Controllers
                     todaysPickUps.Add(customer);
                 }
             }
-
-
             return View(todaysPickUps);
         }
 
         // GET: EmployeesController/Details/5
         public ActionResult CustomerDetails(int id)
         {
-            //var customersOnList = _context.Customers.ToList();
-            //var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
-            //id()).SingleOrDefault();
             return View(customer);
         }
 
@@ -85,36 +79,6 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
-
-        // GET: EmployeesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var employee = _context.Employees.Where(c => c.Id == id).SingleOrDefault();
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            return View(employee);
-        }
-
-        // POST: EmployeesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Employee employee)
-        {
-            try
-            {
-                _context.Update(employee);
-                _context.SaveChanges();
-
-                return RedirectToAction("Index", "Employees");
-                
-            }
-            catch
-            {
-                return View();
-            }
-        }
         public ActionResult PickUps(int id)
         {
             return View();
@@ -124,7 +88,6 @@ namespace TrashCollector.Controllers
 
         public ActionResult PickUps(string dayOfPickUp)
         {
-
             var employeesOnList = _context.Employees.ToList();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employees.Where(c => c.IdentityUserId ==
@@ -142,9 +105,7 @@ namespace TrashCollector.Controllers
             {
                 return NotFound();
             }
-
             return View(customer);
-
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -157,12 +118,6 @@ namespace TrashCollector.Controllers
             _context.SaveChanges();
             return View("CustomerDetails", customerPickedUp);
         }
-
-
-
-
-
-
 
     }
 }

@@ -39,9 +39,7 @@ namespace TrashCollector.Controllers
                 return RedirectToAction("Create", "Customers");
             }
             return View(customer);
-
         }
-
         // GET: CustomersController/Details/5
         public ActionResult Details() //Do I need this??? 
         {
@@ -119,9 +117,7 @@ namespace TrashCollector.Controllers
             {
                 return NotFound();
             }
-
             return View(customer);
-
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -129,7 +125,6 @@ namespace TrashCollector.Controllers
         {
             try
             {
-                // update just the suspend service & the end date.
                 _context.Update(customer);
                 _context.SaveChanges();
 
@@ -140,7 +135,5 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
-        
-
     }
 }
