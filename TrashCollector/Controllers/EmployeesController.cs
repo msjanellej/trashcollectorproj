@@ -51,6 +51,7 @@ namespace TrashCollector.Controllers
         // GET: EmployeesController/Details/5
         public ActionResult CustomerDetails(int id)
         {
+            ViewData["GOOGLE_API_KEY"] = APIkeys.GOOGLE_API_KEY;
             var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
             return View(customer);
         }
