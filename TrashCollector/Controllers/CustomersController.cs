@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SQLitePCL;
 using TrashCollector.Data;
 using TrashCollector.Models;
@@ -67,7 +69,7 @@ namespace TrashCollector.Controllers
         {
             try
             {
-                GetCoordinates(customer.StreetAddress, customer.City, customer.State);
+                GetCoordinates(customer);
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 customer.IdentityUserId = userId;
                 _context.Add(customer);
@@ -102,7 +104,6 @@ namespace TrashCollector.Controllers
         {
             try
             {
-                GetCoordinates(customer.StreetAddress, customer.City, customer.State);
                 _context.Update(customer);
                 _context.SaveChanges();
 
@@ -141,21 +142,25 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
-        static async Task GetCoordinates(string streetAddress, string city, string state)
+        static async Task<Customer> GetCoordinates(Customer customer)
         {
-            try
-            {
 
-                var URL = $"https://maps.googleapis.com/maps/api/geocode/json?address={streetAddress}+{city}+{state}&key={APIkeys.GOOGLE_API_KEY}";
-                HttpResponseMessage response = await httpClient.GetAsync(URL);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                return;
-            }
-            catch
-            {
-                return;
-            }
+            var URL = $"https://maps.googleapis.com/maps/api/geocode/json?address={customer.StreetAddress}+{customer.City}+{customer.State}&key={APIkeys.GOOGLE_API_KEY}";
+            HttpResponseMessage response = await httpClient.GetAsync(URL);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Newtonsoft.Json.Linq.JObject result = JsonConvert.DeserializeObject<JObject>(responseBody);
+            var partOfObject = result["results"];
+            var secondPartOfObject = partOfObject[0];
+            var thirdPartOfObject = secondPartOfObject["geometry"];
+            var fourthPartOfObject = thirdPartOfObject["location"];
+            var latitude = fourthPartOfObject["lat"].ToString();
+            var longitude = fourthPartOfObject["lng"].ToString();
+            customer.latitude = double.Parse(latitude);
+            customer.longitude = double.Parse(longitude);
+            return customer;
+
+
         }
 
 
