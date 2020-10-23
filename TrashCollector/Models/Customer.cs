@@ -40,6 +40,8 @@ namespace TrashCollector.Models
         public DateTime SuspensionEndDate { get; set; }
         [Display(Name = "Has Been Picked Up")]
         public bool isPickedUp { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
 
 
         [ForeignKey("IdentityUser")]

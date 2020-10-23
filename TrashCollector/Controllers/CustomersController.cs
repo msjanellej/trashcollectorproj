@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -17,9 +19,11 @@ namespace TrashCollector.Controllers
 {
     [Authorize(Roles = "Customer")]
 
+
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        static readonly HttpClient httpClient = new HttpClient();
 
 
         public CustomersController(ApplicationDbContext context)
@@ -63,6 +67,7 @@ namespace TrashCollector.Controllers
         {
             try
             {
+                GetCoordinates(customer.StreetAddress, customer.City, customer.State);
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 customer.IdentityUserId = userId;
                 _context.Add(customer);
@@ -97,6 +102,7 @@ namespace TrashCollector.Controllers
         {
             try
             {
+                GetCoordinates(customer.StreetAddress, customer.City, customer.State);
                 _context.Update(customer);
                 _context.SaveChanges();
 
@@ -135,5 +141,24 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
+        static async Task GetCoordinates(string streetAddress, string city, string state)
+        {
+            try
+            {
+
+                var URL = $"https://maps.googleapis.com/maps/api/geocode/json?address={streetAddress}+{city}+{state}&key={APIkeys.GOOGLE_API_KEY}";
+                HttpResponseMessage response = await httpClient.GetAsync(URL);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return;
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+
+
     }
 }
